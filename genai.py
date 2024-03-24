@@ -1,6 +1,7 @@
 import os
 import pathlib
 import textwrap
+from PIL import Image
 from dotenv import load_dotenv
 import google.generativeai as genai
 from IPython.display import display
@@ -33,15 +34,17 @@ def single_response():
 
         for chunk in response:
             print(chunk.text)
-
-        # satisfied = input("\nAre you satisfied with this response? (Y | N): ")
-        # if satisfied in ('Y','y', 'Yes', 'yes'):
-        #     break
     except Exception as e:
         print(f"{type(e).__name__}: {e}")
 
 
-
-def text_from_img_text():
+def text_from_img():
     model = genai.GenerativeModel('gemini-pro-vision')
-    
+    img = Image.open("Lionel-Messi-Argentina-2022-FIFA-World-Cup_(cropped).jpg")
+
+    response = model.generate_content(["Write a short story about this image", img], stream=True)
+    response.resolve()
+
+    print(response.text)
+
+text_from_img_text()
