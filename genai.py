@@ -25,7 +25,7 @@ def to_markdown(text):
 
 # for text-only prompts
 
-def single_response():
+def text_from_text():
     model = genai.GenerativeModel('gemini-pro')
     try:
         prompt = input("User: ")
@@ -37,6 +37,8 @@ def single_response():
     except Exception as e:
         print(f"{type(e).__name__}: {e}")
 
+# text_from_text()
+
 
 def text_from_img():
     model = genai.GenerativeModel('gemini-pro-vision')
@@ -47,4 +49,26 @@ def text_from_img():
 
     print(response.text)
 
-text_from_img_text()
+# text_from_img()
+
+
+def chat_conversions():
+    model = genai.GenerativeModel('gemini-pro')
+    chat = model.start_chat(history=[])
+    chatting = True
+
+    while chatting:
+        prompt = input("User: ")
+        print()     # for newline sake
+        response = chat.send_message(prompt, stream=True)
+        for chunk in response:
+            print(chunk.text)
+        print()     # for newline sake
+
+        chatting = input("Continue chat?(Y|N) ")
+        if chatting in ("N", "n"):
+            # chat_history = chat.history
+            # print(chat_history)
+            break
+
+chat_conversions()
