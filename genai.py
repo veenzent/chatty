@@ -13,17 +13,10 @@ GOOGLE_API_KEY = os.environ.get('GEMINI_API_KEY')
 genai.configure(api_key=GOOGLE_API_KEY)
 
 
-def to_markdown(text):
+def to_markdown(text: str):
   text = text.replace('•', '  *')
   return Markdown(textwrap.indent(text, '> ', predicate=lambda _: True))
 
-
-# for m in genai.list_models():
-#   if 'generateContent' in m.supported_generation_methods:
-#     print(m.name)
-
-
-# for text-only prompts
 
 def text_from_text():
     model = genai.GenerativeModel('gemini-pro')
@@ -39,17 +32,25 @@ def text_from_text():
 
 # text_from_text()
 
+def text_from_img(query: list) -> str:
+    """
+    Summary:
+        Generate text based on an image content.
 
-def text_from_img():
-    model = genai.GenerativeModel('gemini-pro-vision')
-    img = Image.open("Lionel-Messi-Argentina-2022-FIFA-World-Cup_(cropped).jpg")
+    Args:
+        query (list): a list containing a prompt and an image object.
+        Example: ['What is the name of the footballer in this image', image.png]
+    """
+    # old/deprecated
+    # model = genai.GenerativeModel(name='gemini-pro-vision')
 
-    response = model.generate_content(["Write a short story about this image", img], stream=True)
+    # new
+    model = genai.GenerativeModel(model_name='gemini-1.5-flash')
+    response = model.generate_content(query, stream=True)
     response.resolve()
 
-    print(response.text)
-
-# text_from_img()
+    # print(response.text)
+    return response.text
 
 
 def chat_conversions():
@@ -71,4 +72,4 @@ def chat_conversions():
             # print(chat_history)
             break
 
-chat_conversions()
+# chat_conversions()
