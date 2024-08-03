@@ -7,6 +7,8 @@ from genai import genai
 async def generate_response(prompt: str):
     # -------- genai response logic ----------------
     model = genai.GenerativeModel('gemini-pro')
+    # gemini_model = GenerativeModel(MODEL_ID)
+    # model_response = gemini_model.generate_content([...], generation_config, safety_settings={...}, stream=True)
 
     # genai chat history
     chat_session = model.start_chat(history=[])
@@ -15,6 +17,12 @@ async def generate_response(prompt: str):
     return response
 
 async def chat_ui():
+    # Title and subtitle
+    with st.container():
+        st.sidebar.title("Quick Chat AI")
+        st.sidebar.markdown("*built with Gemini AI API*", unsafe_allow_html=True)
+        st.sidebar.markdown("""---""")
+
     # Initialize chat history in streamlit
     if 'messages' not in st.session_state:
         st.session_state.messages = []
