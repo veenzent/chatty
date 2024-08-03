@@ -2,17 +2,19 @@ import time
 import asyncio
 import streamlit as st
 from genai import genai
+from google.generativeai.types import HarmCategory, HarmBlockThreshold
 
 
 async def generate_response(prompt: str):
     # -------- genai response logic ----------------
-    model = genai.GenerativeModel('gemini-pro')
-    # gemini_model = GenerativeModel(MODEL_ID)
-    # model_response = gemini_model.generate_content([...], generation_config, safety_settings={...}, stream=True)
+    model = genai.GenerativeModel('gemini-1.5-flash')
 
     # genai chat history
     chat_session = model.start_chat(history=[])
-    response = chat_session.send_message(prompt, stream=True)
+    response = chat_session.send_message(prompt, safety_settings={
+        HarmCategory.HARM_CATEGORY_HATE_SPEECH: HarmBlockThreshold.BLOCK_NONE,
+        HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_NONE,
+    }, stream=True)
     response.resolve()
     return response
 
